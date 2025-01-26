@@ -124,11 +124,11 @@ class BaseTrainer(metaclass=ABCMeta):
         """
         arch = type(self.model).__name__
         state = {
-            'arch': arch,
-            'epoch': epoch,
+            # 'arch': arch,
+            # 'epoch': epoch,
             'state_dict': self.model.state_dict(),
-            'optimizer': self.optimizer.state_dict(),
-            'epoch_metrics': self.ep_metrics,
+            # 'optimizer': self.optimizer.state_dict(),
+            # 'epoch_metrics': self.ep_metrics,
             'config': self.config
         }
 
