@@ -1,13 +1,15 @@
 import yaml
-import hydra
 import logging
+from functools import partial, update_wrapper
+from importlib import import_module
+from itertools import repeat
+from pathlib import Path
+
+import hydra
 import torch
 import torch.distributed as dist
 from omegaconf import OmegaConf
-from pathlib import Path
-from importlib import import_module
-from itertools import repeat
-from functools import partial, update_wrapper
+from tqdm import tqdm
 
 
 def is_master():
@@ -74,3 +76,18 @@ def write_conf(config, save_path):
     save_path.parent.mkdir(parents=True, exist_ok=True)
     config_dict = OmegaConf.to_container(config, resolve=True)
     write_yaml(config_dict, save_path)
+
+def get_logits(model, dataloader):
+    model.eval()
+    logits_list = []
+    targets_list = []
+
+    with torch.no_grad():
+        for images, labels in tqdm(dataloader):
+            logits = model(images)
+            logits_list.append(logits)
+            targets_list.append(labels)
+
+    logits = torch.cat(logits_list, dim=0)
+    targets = torch.cat(targets_list, dim=0)
+    return logits, targets

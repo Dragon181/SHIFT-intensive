@@ -1,4 +1,4 @@
-import torch
+from torchmetrics import CalibrationError
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
@@ -19,3 +19,8 @@ def recall(output, target):
 
 def f1(output, target):
     return f1_score(target, output, average='weighted')
+
+def ECE(output, target):
+    calibration_error = CalibrationError(task="multiclass", num_classes=29)
+    calibration_error.update(output, target)
+    return calibration_error.compute()
