@@ -41,6 +41,8 @@ def main(config):
     logger.info(f'ECE after calibrating: {ece_after_calibrate}')
     logger.info(f'Temperature: {temperature}')
 
+    torch.save(model.state_dict(), 'model.pth')
+
 
 if __name__ == '__main__':
     # pylint: disable=no-value-for-parameter
